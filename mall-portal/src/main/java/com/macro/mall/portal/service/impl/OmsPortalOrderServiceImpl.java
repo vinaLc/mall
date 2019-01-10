@@ -7,6 +7,7 @@ import com.macro.mall.portal.dao.PortalOrderDao;
 import com.macro.mall.portal.dao.PortalOrderItemDao;
 import com.macro.mall.portal.dao.SmsCouponHistoryDao;
 import com.macro.mall.portal.domain.*;
+import com.macro.mall.portal.properties.CodeConfigProperties;
 import com.macro.mall.portal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,8 +47,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private SmsCouponHistoryMapper couponHistoryMapper;
     @Autowired
     private RedisService redisService;
-    @Value("${redis.key.prefix.orderId}")
-    private String REDIS_KEY_PREFIX_ORDER_ID;
+
+    @Autowired
+    private CodeConfigProperties codeConfigProperties;
     @Autowired
     private PortalOrderDao portalOrderDao;
     @Autowired
@@ -312,7 +314,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private String generateOrderSn(OmsOrder order) {
         StringBuilder sb = new StringBuilder();
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String key = REDIS_KEY_PREFIX_ORDER_ID + date;
+        String key = codeConfigProperties.getRedis_key_prefix_orderId() + date;
         Long increment = redisService.increment(key, 1);
         sb.append(date);
         sb.append(String.format("%02d",order.getSourceType()));

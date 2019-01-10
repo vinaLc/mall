@@ -4,6 +4,9 @@ spring.datasource.username=root
 spring.datasource.password=MasterMysql
 #===datasource end===
 
+#\u914D\u7F6E\u65E5\u5FD7\u751F\u6210\u8DEF\u5F84
+logging.path=/var/logs
+
 #===druid start===
 #\u8FDE\u63A5\u6C60\u521D\u59CB\u5316\u5927\u5C0F
 spring.datasource.druid.initial-size=5
@@ -20,5 +23,5 @@ spring.datasource.druid.stat-view-servlet.login-password=druid
 
 #===es start===
 spring.data.elasticsearch.repositories.enabled = true
-spring.data.elasticsearch.cluster-nodes = es:9300
+spring.data.elasticsearch.cluster-nodes = paascloud-provider-elasticsearch:9300
 #===es end===

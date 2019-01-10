@@ -1,0 +1,76 @@
+mybatis:
+  mapper-locations: classpath:dao/*.xml,classpath*:com/**/mapper/*.xml
+
+spring:
+  profiles:
+    active: @profileActive@
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://paascloud-db-mysql:3306/mall?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: MasterMysql
+
+    druid:
+      initial-size: 5
+      min-idle: 10
+      max-active: 20
+      web-stat-filter:
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+
+  data:
+    mongodb:
+      host: paascloud-db-mongdb
+      port: 27017
+      database: mall-port
+
+  redis:
+    database: 0
+    host: paascloud-db-redis
+    port: 6379
+    password: 123456
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+    timeout: 0
+
+  rabbitmq:
+    host: paascloud-mq-rabbit
+    port: 5672
+    virtual-host: /mall
+    username: user
+    password: user
+    publisher-confirms: true
+
+mall:
+  key:
+    http_port: 8085
+    http_protocol: 'org.apache.coyote.http11.Http11NioProtocol'
+
+    # redis
+    redis_key_prefix_authCode: 'portal:authCode:'
+    redis_key_prefix_orderId: 'portal:orderId:'
+
+    # RabbitMQ
+    rabbitmq_queue_name_cancelOrder: 'cancelOrderQueue'
+
+    authCode_expire_seconds: 90
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core: debug
+    com:
+      macro:
+        mall:
+          mapper: debug
+          portal:
+            dao: debug

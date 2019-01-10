@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+
+  thymeleaf:
+    content-type: text/html
+    encoding: UTF-8
+    mode: HTML5
+    cache: false
+
+
+

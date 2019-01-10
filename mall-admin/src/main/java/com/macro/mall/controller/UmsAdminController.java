@@ -6,11 +6,11 @@ import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.model.UmsPermission;
 import com.macro.mall.model.UmsRole;
+import com.macro.mall.properties.JwtTokenProperties;
 import com.macro.mall.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +31,9 @@ import java.util.Map;
 public class UmsAdminController {
     @Autowired
     private UmsAdminService adminService;
-    @Value("${jwt.tokenHeader}")
-    private String tokenHeader;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+
+    @Autowired
+    private JwtTokenProperties jwt;
 
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -57,7 +56,7 @@ public class UmsAdminController {
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
+        tokenMap.put("tokenHead", jwt.getTokenHead());
         return new CommonResult().success(tokenMap);
     }
 
@@ -65,14 +64,14 @@ public class UmsAdminController {
     @RequestMapping(value = "/token/refresh", method = RequestMethod.GET)
     @ResponseBody
     public Object refreshToken(HttpServletRequest request) {
-        String token = request.getHeader(tokenHeader);
+        String token = request.getHeader(jwt.getTokenHeader());
         String refreshToken = adminService.refreshToken(token);
         if (refreshToken == null) {
             return new CommonResult().failed();
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
+        tokenMap.put("tokenHead", jwt.getTokenHead());
         return new CommonResult().success(tokenMap);
     }
 

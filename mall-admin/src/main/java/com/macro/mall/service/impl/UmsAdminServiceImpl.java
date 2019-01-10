@@ -9,13 +9,13 @@ import com.macro.mall.mapper.UmsAdminMapper;
 import com.macro.mall.mapper.UmsAdminPermissionRelationMapper;
 import com.macro.mall.mapper.UmsAdminRoleRelationMapper;
 import com.macro.mall.model.*;
+import com.macro.mall.properties.JwtTokenProperties;
 import com.macro.mall.service.UmsAdminService;
 import com.macro.mall.util.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -48,11 +48,12 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
+    private JwtTokenProperties jwt;
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+
     @Autowired
     private UmsAdminMapper adminMapper;
     @Autowired
@@ -143,7 +144,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Override
     public String refreshToken(String oldToken) {
-        String token = oldToken.substring(tokenHead.length());
+        String token = oldToken.substring(jwt.getTokenHead().length());
         if (jwtTokenUtil.canRefresh(token)) {
             return jwtTokenUtil.refreshToken(token);
         }

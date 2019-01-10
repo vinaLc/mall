@@ -8,10 +8,10 @@ import com.macro.mall.model.UmsMemberLevel;
 import com.macro.mall.model.UmsMemberLevelExample;
 import com.macro.mall.portal.domain.CommonResult;
 import com.macro.mall.portal.domain.MemberDetails;
+import com.macro.mall.portal.properties.CodeConfigProperties;
 import com.macro.mall.portal.service.RedisService;
 import com.macro.mall.portal.service.UmsMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -38,10 +38,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RedisService redisService;
-    @Value("${redis.key.prefix.authCode}")
-    private String REDIS_KEY_PREFIX_AUTH_CODE;
-    @Value("${authCode.expire.seconds}")
-    private Long AUTH_CODE_EXPIRE_SECONDS;
+
+    @Autowired
+    private CodeConfigProperties codeConfigProperties;
 
     @Override
     public UmsMember getByUsername(String username) {
@@ -100,8 +99,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             sb.append(random.nextInt(10));
         }
         //验证码绑定手机号并存储到redis
-        redisService.set(REDIS_KEY_PREFIX_AUTH_CODE+telephone,sb.toString());
-        redisService.expire(REDIS_KEY_PREFIX_AUTH_CODE+telephone,AUTH_CODE_EXPIRE_SECONDS);
+        redisService.set(codeConfigProperties.getRedis_key_prefix_authCode()+telephone,sb.toString());
+        redisService.expire(codeConfigProperties.getRedis_key_prefix_authCode()+telephone,codeConfigProperties.getAuthCode_expire_seconds());
         return new CommonResult().success("获取验证码成功",sb.toString());
     }
 
@@ -144,7 +143,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if(StringUtils.isEmpty(authCode)){
             return false;
         }
-        String realAuthCode = redisService.get(REDIS_KEY_PREFIX_AUTH_CODE + telephone);
+        String realAuthCode = redisService.get(codeConfigProperties.getRedis_key_prefix_authCode() + telephone);
         return authCode.equals(realAuthCode);
     }
 

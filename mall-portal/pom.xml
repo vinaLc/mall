@@ -94,41 +94,102 @@
         </dependency>
     </dependencies>
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>com.spotify</groupId>-->
-                <!--<artifactId>docker-maven-plugin</artifactId>-->
-                <!--<version>1.1.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>build-image</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>build</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<imageName>mall/${project.artifactId}:${project.version}</imageName>-->
-                    <!--<dockerHost>http://39.98.190.128:2375</dockerHost>-->
-                    <!--<baseImage>java:8</baseImage>-->
-                    <!--<entryPoint>["java", "-jar","-Dspring.profiles.active=prod","/${project.build.finalName}.jar"]</entryPoint>-->
-                    <!--<resources>-->
-                        <!--<resource>-->
-                            <!--<targetPath>/</targetPath>-->
-                            <!--<directory>${project.build.directory}</directory>-->
-                            <!--<include>${project.build.finalName}.jar</include>-->
-                        <!--</resource>-->
-                    <!--</resources>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            &lt;!&ndash;<plugin>&ndash;&gt;
+                &lt;!&ndash;<groupId>com.spotify</groupId>&ndash;&gt;
+                &lt;!&ndash;<artifactId>docker-maven-plugin</artifactId>&ndash;&gt;
+                &lt;!&ndash;<version>1.1.0</version>&ndash;&gt;
+                &lt;!&ndash;<executions>&ndash;&gt;
+                    &lt;!&ndash;<execution>&ndash;&gt;
+                        &lt;!&ndash;<id>build-image</id>&ndash;&gt;
+                        &lt;!&ndash;<phase>package</phase>&ndash;&gt;
+                        &lt;!&ndash;<goals>&ndash;&gt;
+                            &lt;!&ndash;<goal>build</goal>&ndash;&gt;
+                        &lt;!&ndash;</goals>&ndash;&gt;
+                    &lt;!&ndash;</execution>&ndash;&gt;
+                &lt;!&ndash;</executions>&ndash;&gt;
+                &lt;!&ndash;<configuration>&ndash;&gt;
+                    &lt;!&ndash;<imageName>mall/${project.artifactId}:${project.version}</imageName>&ndash;&gt;
+                    &lt;!&ndash;<dockerHost>http://39.98.190.128:2375</dockerHost>&ndash;&gt;
+                    &lt;!&ndash;<baseImage>java:8</baseImage>&ndash;&gt;
+                    &lt;!&ndash;<entryPoint>["java", "-jar","-Dspring.profiles.active=prod","/${project.build.finalName}.jar"]</entryPoint>&ndash;&gt;
+                    &lt;!&ndash;<resources>&ndash;&gt;
+                        &lt;!&ndash;<resource>&ndash;&gt;
+                            &lt;!&ndash;<targetPath>/</targetPath>&ndash;&gt;
+                            &lt;!&ndash;<directory>${project.build.directory}</directory>&ndash;&gt;
+                            &lt;!&ndash;<include>${project.build.finalName}.jar</include>&ndash;&gt;
+                        &lt;!&ndash;</resource>&ndash;&gt;
+                    &lt;!&ndash;</resources>&ndash;&gt;
+                &lt;!&ndash;</configuration>&ndash;&gt;
+            &lt;!&ndash;</plugin>&ndash;&gt;
+        </plugins>
+    </build>-->
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <profileActive>pro</profileActive>
+            </properties>
+        </profile>
+    </profiles>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>springloaded</artifactId>
+                        <version>1.2.5.RELEASE</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- 添加docker-maven插件 -->
+            <!--<plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.13</version>
+                <configuration>
+                    <imageName>${project.artifactId}:${project.version}</imageName>
+                    <baseImage>java</baseImage>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
-
 
 </project>

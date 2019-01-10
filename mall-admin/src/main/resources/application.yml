@@ -1,0 +1,51 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://paascloud-db-mysql:3306/mall?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: MasterMysql
+
+    druid:
+      initial-size: 5
+      min-idle: 10
+      max-active: 20
+      web-stat-filter:
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+
+mall:
+  security:
+    aliyun:
+      oss:
+        endpoint: oss-cn-shenzhen.aliyuncs.com
+        accessKeyId: test
+        accessKeySecret: test
+        bucketName: macro-oss
+        #policy:
+        expire: 300
+        maxSize: 10
+        callback: http://localhost:8080/aliyun/oss/callback
+        #dir:
+        prefix: mall/images/
+
+    jwt:
+      tokenHeader: Authorization
+      secret: mySecret
+      expiration: 604800
+      tokenHead: Bearer
+
+mybatis:
+  mapper-locations: classpath:dao/*.xml,classpath*:com/**/mapper/*.xml
+logging:
+  level:
+    root: info
+    com:
+      macro:
+        mall: debug
+
+
+
